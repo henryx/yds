@@ -32,12 +32,17 @@ public class Main {
         System.out.println("    -q or --query            Query data");
     }
 
-    public void setCfg(String cfgFile) throws IOException {
-        this.cfgFile = new Properties();
-        this.cfgFile.load(new FileInputStream(cfgFile));
+    public void setCfg(String cfgFile) {
+        try {
+            this.cfgFile = new Properties();
+            this.cfgFile.load(new FileInputStream(cfgFile));
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
+        }
     }
 
-    public void parseOption(String option) throws IOException {
+    public void parseOption(String option) {
         if (option.startsWith("-c") ||
             option.startsWith("--cfg=")) {
             if (option.startsWith("--")) {
@@ -58,10 +63,14 @@ public class Main {
         Fetcher fetch;
 
         if (this.scan.booleanValue()) {
-            fetch = new Fetcher(this.cfgFile);
-            fetch.start();
+            try {
+                fetch = new Fetcher(this.cfgFile);
+                fetch.start();
+            } catch (Exception ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (this.query.booleanValue()) {
-
+            // TODO: implement interface for queries
         } else {
             System.out.println("Scan and Query aren't available at the same instance");
             System.exit(1);
@@ -77,11 +86,7 @@ public class Main {
         m = new Main();
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
-                try {
-                    m.parseOption(args[i]);
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                m.parseOption(args[i]);
             }
             m.execute();
         } else {
