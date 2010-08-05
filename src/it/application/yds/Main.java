@@ -18,6 +18,7 @@ import java.util.logging.Logger;
  */
 public class Main {
     public static final String PROGNAME = "YDS";
+    public static final String VERSION = "0.1";
     private Properties cfgFile;
     private Boolean scan;
     private Boolean query;
@@ -66,7 +67,7 @@ public class Main {
             try {
                 fetch = new Fetcher(this.cfgFile);
                 fetch.start();
-            } catch (Exception ex) {
+            } catch (IllegalArgumentException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (this.query.booleanValue()) {
@@ -91,7 +92,7 @@ public class Main {
             m.execute();
         } else {
             m.printHelp();
-            System.exit(1);
+            System.exit(0);
         }
     }
 }

@@ -7,10 +7,19 @@ package it.application.yds.fetch;
 
 import it.application.yds.fetch.engines.Engine;
 import it.application.yds.fetch.engines.PgEngine;
+import it.application.yds.fetch.streams.PdfStream;
+import it.application.yds.fetch.streams.Stream;
+import it.application.yds.fetch.streams.TextStream;
+import it.application.yds.util.FileListing;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.activation.MimetypesFileTypeMap;
 
 /**
  *
@@ -18,12 +27,19 @@ import java.util.Vector;
  */
 public class Fetcher {
     private Engine engine;
+    private MimetypesFileTypeMap mimeParser;
     private Properties cfg;
 
-    public Fetcher(Properties cfg) throws Exception {
+    public Fetcher(Properties cfg) throws IllegalArgumentException {
         HashMap<String, String> parameters;
 
         this.cfg = cfg;
+        try {
+            this.mimeParser = new MimetypesFileTypeMap("/etc/mime.types");
+        } catch (IOException ex) {
+            this.mimeParser = new MimetypesFileTypeMap();
+        }
+
         parameters = new HashMap<String, String>();
 
         if (this.cfg.getProperty("engine").equals("postgresql")) {
@@ -35,45 +51,41 @@ public class Fetcher {
 
             this.engine = new PgEngine(parameters);
         } else {
-            throw new Exception("Engine not supported");
+            throw new IllegalArgumentException("Engine not supported");
         }
-    }
-
-    // FIXME: rewrite for support multiple paths
-    // FIXME: this method is not recursive
-    private Vector<String[]> parseDirectories() {
-        Vector<String[]> result;
-        File dir, oneDirItem;
-        String[] list, content;
-        String item, path;
-        int i;
-
-        result = new Vector<String[]>();
-        path = this.cfg.getProperty("path");
-        dir = new File(path);
-
-        if (dir.isDirectory()) {
-            list = dir.list();
-            for (i = 0; i < list.length; i++) {
-                content = new String[2];
-
-                item = list[i];
-                oneDirItem = new File(path, item);
-                if (!oneDirItem.isDirectory()) {
-                    content[0] = path + "/" + item;
-                    content[1] = "FILE";
-                } else {
-                    content[0] =  path + "/" + item;
-                    content[1] = "DIRECTORY";
-                }
-                result.add(content);
-            }
-        }
-
-        return result;
     }
 
     public void start() {
-        parseDirectories();
+        try {
+            File path;
+            Stream stream;
+            String mime;
+
+            path = new File(this.cfg.getProperty("path"));
+            List<File> files = FileListing.getFileListing(path);
+
+            for (File file : files) {
+                if (!file.isDirectory()) {
+                    mime = this.mimeParser.getContentType(file);
+
+                    if (mime.startsWith("text")) {
+                        stream = new TextStream();
+                    } else if (mime.endsWith("pdf")||file.getName().endsWith("pdf")) {
+                        stream = new PdfStream();
+                    } else {
+                        stream = null;
+                    }
+
+                    if (stream != null) {
+                        stream.setFile(file);
+                    }
+
+                    System.out.print(file);
+                    System.out.println(": " + mime);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Fetcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
