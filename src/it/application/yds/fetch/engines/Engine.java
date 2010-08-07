@@ -5,10 +5,14 @@
 
 package it.application.yds.fetch.engines;
 
+import it.application.yds.fetch.streams.InterfaceStream;
+
 /**
  *
  * @author enrico
  */
 public interface Engine {
+
+    public void store(InterfaceStream stream);
 
 }

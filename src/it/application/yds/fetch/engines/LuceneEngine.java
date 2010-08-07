@@ -5,10 +5,16 @@
 
 package it.application.yds.fetch.engines;
 
+import it.application.yds.fetch.streams.InterfaceStream;
+
 /**
  *
  * @author enrico
  */
 public class LuceneEngine implements Engine {
+
+    public void store(InterfaceStream stream) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

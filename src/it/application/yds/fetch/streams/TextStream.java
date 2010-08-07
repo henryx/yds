@@ -1,18 +1,12 @@
 package it.application.yds.fetch.streams;
 
-import java.io.File;
-
-public class TextStream implements Stream {
+public class TextStream extends AbstractStream implements InterfaceStream {
 
     public TextStream() {
-    }
-
-    public void setFile(File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        super();
     }
 
     public String getStream() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }

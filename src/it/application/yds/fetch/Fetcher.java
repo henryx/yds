@@ -8,7 +8,7 @@ package it.application.yds.fetch;
 import it.application.yds.fetch.engines.Engine;
 import it.application.yds.fetch.engines.PgEngine;
 import it.application.yds.fetch.streams.PdfStream;
-import it.application.yds.fetch.streams.Stream;
+import it.application.yds.fetch.streams.InterfaceStream;
 import it.application.yds.fetch.streams.TextStream;
 import it.application.yds.util.FileListing;
 import java.io.File;
@@ -58,7 +58,7 @@ public class Fetcher {
     public void start() {
         try {
             File path;
-            Stream stream;
+            InterfaceStream stream;
             String mime;
 
             path = new File(this.cfg.getProperty("path"));
@@ -78,10 +78,8 @@ public class Fetcher {
 
                     if (stream != null) {
                         stream.setFile(file);
+                        this.engine.store(stream);
                     }
-
-                    System.out.print(file);
-                    System.out.println(": " + mime);
                 }
             }
         } catch (FileNotFoundException ex) {

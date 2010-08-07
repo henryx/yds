@@ -11,14 +11,13 @@ import java.io.File;
  *
  * @author enrico
  */
-public class PdfStream implements Stream {
+public class PdfStream extends AbstractStream implements InterfaceStream {
 
-    public void setFile(File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public PdfStream() {
+        super();
     }
 
     public String getStream() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }
