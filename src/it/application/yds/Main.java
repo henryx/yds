@@ -8,6 +8,7 @@ package it.application.yds;
 import it.application.yds.fetch.Fetcher;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,6 +69,8 @@ public class Main {
                 fetch = new Fetcher(this.cfgFile);
                 fetch.start();
             } catch (IllegalArgumentException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (this.query.booleanValue()) {

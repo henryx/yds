@@ -14,6 +14,7 @@ import it.application.yds.util.FileListing;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -30,7 +31,7 @@ public class Fetcher {
     private MimetypesFileTypeMap mimeParser;
     private Properties cfg;
 
-    public Fetcher(Properties cfg) throws IllegalArgumentException {
+    public Fetcher(Properties cfg) throws IllegalArgumentException, SQLException {
         HashMap<String, String> parameters;
 
         this.cfg = cfg;
@@ -43,13 +44,7 @@ public class Fetcher {
         parameters = new HashMap<String, String>();
 
         if (this.cfg.getProperty("engine").equals("postgresql")) {
-            parameters.put("host", this.cfg.getProperty("pg_host"));
-            parameters.put("port", this.cfg.getProperty("pg_port"));
-            parameters.put("user", this.cfg.getProperty("pg_user"));
-            parameters.put("password", this.cfg.getProperty("pg_password"));
-            parameters.put("dbname", this.cfg.getProperty("pg_database"));
-
-            this.engine = new PgEngine(parameters);
+            this.engine = new PgEngine(this.cfg);
         } else {
             throw new IllegalArgumentException("Engine not supported");
         }
