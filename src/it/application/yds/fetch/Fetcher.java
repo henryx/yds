@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2010 Enrico Bianchi (enrico.bianchi@ymail.com)
+ * Project       YDS
+ * Description   The Yggdrasill Document Search - A java based file indexer
+ * License       BSD (see LICENSE.BSD for details)
  */
 
 package it.application.yds.fetch;

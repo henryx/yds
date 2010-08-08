@@ -16,6 +16,13 @@ import java.util.logging.Logger;
  * @author Alex Wong
  * @author anonymous user
  */
+
+/*
+ * NOTE: I don't know what is the licence abuot this file. In doubt, I release
+ *       this file under BSD licence
+ *       Enrico
+ */
+
 public final class FileListing {
 
     /**
