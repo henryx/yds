@@ -66,13 +66,15 @@ public class Fetcher {
                     if (mime.startsWith("text")) {
                         stream = new TextStream();
                     } else if (mime.endsWith("pdf")||file.getName().endsWith("pdf")) {
-                        stream = new PdfStream();
+                        //stream = new PdfStream();
+                        stream = null;
                     } else {
                         stream = null;
                     }
 
                     if (stream != null) {
                         stream.setFile(file);
+                        stream.setMime(mime);
                         this.engine.store(stream);
                     }
                 }

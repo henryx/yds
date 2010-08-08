@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractStream {
 
+    private String mime;
     protected File file;
 
     public void setFile(File file) {
@@ -72,4 +73,11 @@ public abstract class AbstractStream {
         return this.file.getAbsolutePath();
     }
 
+    public void setMime(String mime) {
+        this.mime = mime;
+    }
+    
+    public String getMime() {
+        return this.mime;
+    }
 }
