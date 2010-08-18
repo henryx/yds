@@ -65,11 +65,10 @@ public class Fetcher {
                 if (!file.isDirectory()) {
                     mime = this.mimeParser.getContentType(file);
 
-                    if (mime.startsWith("text")) {
+                    if (mime.startsWith("text")||mime.endsWith("html")) {
                         stream = new TextStream();
-                    } else if (mime.endsWith("pdf")||file.getName().endsWith("pdf")) {
-                        //stream = new PdfStream();
-                        stream = null;
+                    } else if (mime.endsWith("pdf")||file.getName().toLowerCase().endsWith("pdf")) {
+                        stream = new PdfStream();
                     } else {
                         stream = null;
                     }
