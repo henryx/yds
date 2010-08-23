@@ -47,7 +47,7 @@ public abstract class AbstractStream {
         return complete.digest();
     }
 
-    public String getHash() {
+    public String getHash() throws IOException {
         BigInteger bigInt;
         String result;
         byte[] check;
@@ -61,9 +61,6 @@ public abstract class AbstractStream {
             Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
             result = "";
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
-            result = "";
-        } catch (IOException ex) {
             Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
             result = "";
         }

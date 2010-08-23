@@ -8,6 +8,7 @@
 package it.application.yds.fetch.engines;
 
 import it.application.yds.fetch.streams.InterfaceStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -170,12 +171,20 @@ public class PgEngine implements Engine {
         String file, hash, mime, text;
         boolean hashIndexed, fileIndexed;
 
-        Logger.getLogger(PgEngine.class.getName()).log(Level.FINEST, "{0}: {1}", new Object[]{stream.getFileName(), stream.getHash()});
+        try {
+            Logger.getLogger(PgEngine.class.getName()).log(Level.FINEST, "{0}: {1}", new Object[]{stream.getFileName(), stream.getHash()});
+            file = stream.getFileName();
+            hash = stream.getHash();
+            mime = stream.getMime();
+            text = stream.getStream();
+        } catch (IOException ex) {
+            Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, null, ex);
 
-        file = stream.getFileName();
-        hash = stream.getHash();
-        mime = stream.getMime();
-        text = stream.getStream();
+            file = "";
+            hash = "";
+            mime = "";
+            text = "";
+        }
 
         if (!text.equals("")) {
             try {

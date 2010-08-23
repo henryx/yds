@@ -21,7 +21,7 @@ public class TextStream extends AbstractStream implements InterfaceStream {
         super();
     }
 
-    private String streamFromText() {
+    private String streamFromText() throws IOException {
         ArrayList<String> text;
         BufferedReader buffer;
         String line, result;
@@ -38,14 +38,11 @@ public class TextStream extends AbstractStream implements InterfaceStream {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
             result = "";
-        } catch (IOException ex) {
-            Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
-            result = "";
         }
         return result;
     }
 
-    public String getStream() {
+    public String getStream() throws IOException {
         // TODO: write methods to extract text from formatted text files (e.g. HTML)
 
         if (this.getMime().contains("html")) {

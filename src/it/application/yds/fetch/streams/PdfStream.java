@@ -7,6 +7,13 @@
 
 package it.application.yds.fetch.streams;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.pdfbox.cos.COSDocument;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFTextStripper;
+
 
 /**
  *
@@ -18,7 +25,17 @@ public class PdfStream extends AbstractStream implements InterfaceStream {
         super();
     }
 
-    public String getStream() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getStream() throws IOException {
+        PDDocument document;
+        PDFTextStripper stripper;
+        String result;
+
+        stripper = new PDFTextStripper();
+        document = PDDocument.load(file);
+
+        result = stripper.getText(document);
+        document.close();
+
+        return result;
     }
 }

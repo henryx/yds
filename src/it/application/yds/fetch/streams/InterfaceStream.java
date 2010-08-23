@@ -8,6 +8,7 @@
 package it.application.yds.fetch.streams;
 
 import java.io.File;
+import java.io.IOException;
 
 public interface InterfaceStream {
     public void setFile(File file);
@@ -15,6 +16,6 @@ public interface InterfaceStream {
 
     public String getFileName();
     public String getMime();
-    public String getHash();
-    public String getStream();
+    public String getHash() throws IOException;
+    public String getStream() throws IOException;
 }
