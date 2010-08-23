@@ -30,12 +30,16 @@ public class PdfStream extends AbstractStream implements InterfaceStream {
         PDFTextStripper stripper;
         String result;
 
-        stripper = new PDFTextStripper();
-        document = PDDocument.load(file);
+        try {
+            stripper = new PDFTextStripper();
+            document = PDDocument.load(this.file);
 
-        result = stripper.getText(document);
-        document.close();
+            result = stripper.getText(document);
+            document.close();
 
+        } catch (NullPointerException ex) {
+            result = "";
+        }
         return result;
     }
 }

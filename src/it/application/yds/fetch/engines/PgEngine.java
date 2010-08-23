@@ -195,13 +195,12 @@ public class PgEngine implements Engine {
 
                     if (!fileIndexed) {
                         this.indexFile(hash, file, mime);
-                        this.conn.commit();
                     }
                 } else {
                     this.indexHash(hash, text);
                     this.indexFile(hash, file, mime);
-                    this.conn.commit();
                 }
+                this.conn.commit();
             } catch (SQLException ex) {
                 Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, "Problems about indexing file {0}", file);
                 Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, null, ex);
