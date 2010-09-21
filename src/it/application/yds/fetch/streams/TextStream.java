@@ -41,12 +41,17 @@ public class TextStream extends AbstractStream implements InterfaceStream {
         return result;
     }
 
+    private String streamFromHTML() {
+        // TODO: write method to extract text from HTML files
+        return "";
+    }
+
+
     public String getStream() throws IOException {
         // TODO: write methods to extract text from formatted text files (e.g. HTML)
 
-        if (this.getMime().contains("html")) {
-            // TODO: write method to extract text from HTML files
-            return "";
+        if (this.getMime().equals("text/html")) {
+            return streamFromHTML();
         } else {
             return streamFromText();
         }

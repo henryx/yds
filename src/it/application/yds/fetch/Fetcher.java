@@ -12,6 +12,7 @@ import it.application.yds.fetch.engines.Engine;
 import it.application.yds.fetch.engines.PgEngine;
 import it.application.yds.fetch.streams.PdfStream;
 import it.application.yds.fetch.streams.InterfaceStream;
+import it.application.yds.fetch.streams.OfficeTextStream;
 import it.application.yds.fetch.streams.TextStream;
 import it.application.yds.util.FileListing;
 import java.io.File;
@@ -64,10 +65,18 @@ public class Fetcher {
                 if (!file.isDirectory()) {
                     mime = this.mimeParser.getContentType(file);
 
-                    if (mime.startsWith("text")||mime.endsWith("html")) {
+                    if (mime.equals("text/plain") ||
+                        mime.equals("text/html")) {
                         stream = new TextStream();
-                    } else if (mime.endsWith("pdf")||file.getName().toLowerCase().endsWith("pdf")) {
+                    } else if (mime.equals("application/pdf") ||
+                               mime.equals("application/x-pdf") ||
+                               mime.equals("application/x-bzpdf") ||
+                               mime.equals("application/x-gzpdf")){
                         stream = new PdfStream();
+                    } else if (mime.equals("application/vnd.oasis.opendocument.text") ||
+                               mime.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ||
+                               mime.equals("application/msword")) {
+                        stream = new OfficeTextStream();
                     } else {
                         stream = null;
                     }
