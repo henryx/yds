@@ -7,6 +7,7 @@
 
 package it.application.yds.fetch.engines;
 
+import it.application.yds.Main;
 import it.application.yds.fetch.streams.InterfaceStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -16,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -48,7 +47,7 @@ public class PgEngine implements Engine {
             Class.forName("org.postgresql.Driver");
             this.conn = DriverManager.getConnection(url, this.cfg.getProperty("pg_user"), this.cfg.getProperty("pg_password"));
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
         }
     }
 
@@ -91,7 +90,7 @@ public class PgEngine implements Engine {
             this.conn.commit();
 
         } catch (SQLException ex) {
-            Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
         }
     }
 
@@ -172,13 +171,13 @@ public class PgEngine implements Engine {
         boolean hashIndexed, fileIndexed;
 
         try {
-            Logger.getLogger(PgEngine.class.getName()).log(Level.FINEST, "{0}: {1}", new Object[]{stream.getFileName(), stream.getHash()});
+            Main.logger.debug(stream.getFileName() + ": " + stream.getHash());
             file = stream.getFileName();
             hash = stream.getHash();
             mime = stream.getMime();
             text = stream.getStream();
         } catch (IOException ex) {
-            Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
 
             file = "";
             hash = "";
@@ -202,8 +201,7 @@ public class PgEngine implements Engine {
                 }
                 this.conn.commit();
             } catch (SQLException ex) {
-                Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, "Problems about indexing file {0}", file);
-                Logger.getLogger(PgEngine.class.getName()).log(Level.SEVERE, null, ex);
+                Main.logger.error("Problems about indexing file " + file, ex);
             }
         }
     }

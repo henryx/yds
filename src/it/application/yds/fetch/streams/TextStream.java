@@ -7,13 +7,12 @@
 
 package it.application.yds.fetch.streams;
 
+import it.application.yds.Main;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TextStream extends AbstractStream implements InterfaceStream {
 
@@ -36,7 +35,7 @@ public class TextStream extends AbstractStream implements InterfaceStream {
             result = text.toString();
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
             result = "";
         }
         return result;

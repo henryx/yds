@@ -7,6 +7,7 @@
 
 package it.application.yds.fetch;
 
+import it.application.yds.Main;
 import it.application.yds.fetch.engines.Engine;
 import it.application.yds.fetch.engines.PgEngine;
 import it.application.yds.fetch.streams.PdfStream;
@@ -20,8 +21,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.activation.MimetypesFileTypeMap;
 
 /**
@@ -81,7 +80,7 @@ public class Fetcher {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Fetcher.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
         }
     }
 }

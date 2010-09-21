@@ -7,6 +7,7 @@
 
 package it.application.yds.fetch.streams;
 
+import it.application.yds.Main;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,8 +16,6 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -58,10 +57,10 @@ public abstract class AbstractStream {
 
             result = bigInt.toString(16).toUpperCase();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
             result = "";
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(TextStream.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
             result = "";
         }
 

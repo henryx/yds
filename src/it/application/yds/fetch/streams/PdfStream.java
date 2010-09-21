@@ -7,10 +7,8 @@
 
 package it.application.yds.fetch.streams;
 
+import it.application.yds.Main;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 
@@ -38,6 +36,7 @@ public class PdfStream extends AbstractStream implements InterfaceStream {
             document.close();
 
         } catch (NullPointerException ex) {
+            Main.logger.error(null, ex);
             result = "";
         }
         return result;

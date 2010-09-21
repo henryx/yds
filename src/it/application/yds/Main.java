@@ -12,8 +12,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  *
@@ -21,7 +24,8 @@ import java.util.logging.Logger;
  */
 public class Main {
     public static final String PROGNAME = "YDS";
-    public static final String VERSION = "0.1";
+    public static final String VERSION = "0.2";
+    public static final Logger logger = Logger.getLogger("YDS");
     private Properties cfgFile;
     private Boolean scan;
     private Boolean query;
@@ -29,21 +33,38 @@ public class Main {
     public Main() {
     }
 
-    public void printHelp() {
-        System.out.println("Usage:");
-        System.out.println("    -c<file> or --cfg=<file> Set the configuration file");
-        System.out.println("    -s or --scan             Scan data");
-        System.out.println("    -q or --query            Query data");
+    private void setLog() {
+        Appender appender;
+        
+        try {
+            appender = new FileAppender(new PatternLayout("%d %-5p %c - %m%n"), this.cfgFile.getProperty("log_file"));
+            Main.logger.addAppender(appender);
+            Main.logger.setLevel(Level.toLevel(this.cfgFile.getProperty("log_level")));
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.FATAL, null, ex);
+            System.exit(2);
+        } catch (SecurityException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.FATAL, null, ex);
+            System.exit(2);
+        }
     }
 
-    public void setCfg(String cfgFile) {
+    private void setCfg(String cfgFile) {
         try {
             this.cfgFile = new Properties();
             this.cfgFile.load(new FileInputStream(cfgFile));
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.error(null, ex);
             System.exit(1);
         }
+    }
+
+    public void printHelp() {
+        System.out.println(Main.PROGNAME + " " + Main.VERSION);
+        System.out.println("Usage:");
+        System.out.println("    -c<file> or --cfg=<file> Set the configuration file");
+        System.out.println("    -s or --scan             Scan data");
+        System.out.println("    -q or --query            Query data");
     }
 
     public void parseOption(String option) {
@@ -66,14 +87,16 @@ public class Main {
     public void execute() {
         Fetcher fetch;
 
+        this.setLog();
+
         if (this.scan.booleanValue()) {
             try {
                 fetch = new Fetcher(this.cfgFile);
                 fetch.start();
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                Main.logger.error(null, ex);
             } catch (SQLException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                Main.logger.error(null, ex);
             }
         } else if (this.query.booleanValue()) {
             // TODO: implement interface for queries
