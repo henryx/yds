@@ -7,7 +7,9 @@
 
 package it.application.yds.fetch.streams;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 
 /**
  *
@@ -23,23 +25,21 @@ public class OfficeTextStream extends AbstractStream implements InterfaceStream 
         return "";
     }
 
-    // TODO: implement Office Word (pre 2007) extractor
-    private String streamFromOfficeWordText() {
-        return "";
-    }
+    private String streamFromOfficeWordText() throws IOException {
+        String result;
+        WordExtractor extract;
 
-    // TODO: implement Office Word (2007+) extractor
-    private String streamFromOOXMLText() {
-        return "";
+        extract = new WordExtractor(new FileInputStream(this.file));
+        result = extract.getText();
+
+        return result;
     }
 
     public String getStream() throws IOException {
         if (this.getMime().equals("application/vnd.oasis.opendocument.text")) {
             return streamFromOOWriterText();
-        } else if (this.getMime().equals("application/msword")) {
-            return streamFromOfficeWordText();
         } else {
-            return streamFromOOXMLText();
+             return streamFromOfficeWordText();
         }
     }
 }
