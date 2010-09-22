@@ -10,6 +10,8 @@ package it.application.yds.fetch.streams;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.odftoolkit.odfdom.OdfFileDom;
+import org.odftoolkit.odfdom.doc.OdfDocument;
 
 /**
  *
@@ -21,8 +23,20 @@ public class OfficeTextStream extends AbstractStream implements InterfaceStream 
     }
 
     // TODO: implement OpenOffice Writer extractor
-    private String streamFromOOWriterText() {
-        return "";
+    private String streamFromOOWriterText() throws IOException {
+        OdfDocument doc;
+        OdfFileDom dom;
+        String result;
+
+        try {
+            doc = OdfDocument.loadDocument(this.file);
+            result = doc.getOfficeBody().getTextContent();
+
+        } catch (Exception ex) {
+            throw new IOException(ex.getMessage());
+        }
+
+        return result;
     }
 
     private String streamFromOfficeWordText() throws IOException {
