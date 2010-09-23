@@ -34,16 +34,14 @@ public class Fetcher {
     private Properties cfg;
 
     public Fetcher(Properties cfg) throws IllegalArgumentException, SQLException {
-        HashMap<String, String> parameters;
-
         this.cfg = cfg;
         try {
+            // NOTE: /etc/mime.types is used on UNIX systems.
+            //       In Windows systems this file doesn't exist
             this.mimeParser = new MimetypesFileTypeMap("/etc/mime.types");
         } catch (IOException ex) {
             this.mimeParser = new MimetypesFileTypeMap();
         }
-
-        parameters = new HashMap<String, String>();
 
         if (this.cfg.getProperty("engine").equals("postgresql")) {
             this.engine = new PgEngine(this.cfg);

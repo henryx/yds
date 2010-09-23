@@ -8,6 +8,8 @@
 package it.application.yds.fetch.engines;
 
 import it.application.yds.fetch.streams.InterfaceStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -16,5 +18,8 @@ import it.application.yds.fetch.streams.InterfaceStream;
 public interface Engine {
 
     public void store(InterfaceStream stream);
+    public ArrayList<String> getHashStored() throws SQLException;
+    public ArrayList<String> getFileStored(String hash) throws SQLException;
+    public void removeHash(String hash) throws SQLException;
 
 }

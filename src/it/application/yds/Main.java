@@ -7,6 +7,7 @@
 
 package it.application.yds;
 
+import it.application.yds.clean.Cleaner;
 import it.application.yds.fetch.Fetcher;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,8 +32,13 @@ public class Main {
     private Boolean query;
 
     public Main() {
+        this.scan = Boolean.FALSE;
+        this.query = Boolean.FALSE;
     }
 
+    /**
+     * Create log via log4j
+     */
     private void setLog() {
         Appender appender;
         
@@ -49,6 +55,10 @@ public class Main {
         }
     }
 
+    /**
+     * Open the configuration file
+     * @param cfgFile a configuration file
+     */
     private void setCfg(String cfgFile) {
         try {
             this.cfgFile = new Properties();
@@ -59,15 +69,23 @@ public class Main {
         }
     }
 
+    /**
+     * Print various information about che application
+     */
     public void printHelp() {
         System.out.println(Main.PROGNAME + " " + Main.VERSION);
         System.out.println("Usage:");
         System.out.println("    -c<file> or --cfg=<file> Set the configuration file");
         System.out.println("    -s or --scan             Scan data");
         System.out.println("    -q or --query            Query data");
+        System.out.println("    -h or --help             Print this help");
     }
 
-    public void parseOption(String option) {
+    /**
+     * Parser for parameters passed via command line
+     * @param option a parameter
+     */
+    public void parseOption(String option) throws IllegalArgumentException {
         if (option.startsWith("-c") ||
             option.startsWith("--cfg=")) {
             if (option.startsWith("--")) {
@@ -81,13 +99,40 @@ public class Main {
         } else if (option.equals("-q") ||
                    option.equals("--query")) {
             this.query = Boolean.TRUE;
+        } else if (option.equals("-h") ||
+                   option.equals("--help")) {
+            this.printHelp();
+            System.exit(0);
+        } else {
+            System.out.println("Invalid parameter");
+            this.printHelp();
+            System.exit(3);
         }
     }
 
     public void execute() {
         Fetcher fetch;
+        Thread t;
+
+        if (this.scan.booleanValue() && this.query.booleanValue()) {
+            System.out.println("Scan and Query aren't available at the same instance");
+            System.exit(1);
+        } else if (!this.scan.booleanValue() && !this.scan.booleanValue()) {
+            System.out.println("No operation selected");
+            System.exit(1);
+        }
 
         this.setLog();
+
+        try {
+            t = new Thread(new Cleaner(this.cfgFile));
+            t.setName("Cleaner");
+            t.start();
+        } catch (IllegalArgumentException ex) {
+            Main.logger.error(null, ex);
+        } catch (SQLException ex) {
+            Main.logger.error(null, ex);
+        }
 
         if (this.scan.booleanValue()) {
             try {
@@ -98,11 +143,10 @@ public class Main {
             } catch (SQLException ex) {
                 Main.logger.error(null, ex);
             }
-        } else if (this.query.booleanValue()) {
+        }
+
+        if (this.query.booleanValue()) {
             // TODO: implement interface for queries
-        } else {
-            System.out.println("Scan and Query aren't available at the same instance");
-            System.exit(1);
         }
     }
 

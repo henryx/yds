@@ -8,6 +8,8 @@
 package it.application.yds.fetch.engines;
 
 import it.application.yds.fetch.streams.InterfaceStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -16,6 +18,18 @@ import it.application.yds.fetch.streams.InterfaceStream;
 public class LuceneEngine implements Engine {
 
     public void store(InterfaceStream stream) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ArrayList<String> getHashStored() throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void removeHash(String hash) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ArrayList<String> getFileStored(String hash) throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
