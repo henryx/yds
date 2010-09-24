@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Properties;
 
 /**
@@ -106,8 +107,10 @@ public class PgEngine implements Engine {
         res = pstmt.executeQuery();
 
         res.next();
-
         values = res.getInt(1);
+
+        res.close();
+        pstmt.close();
 
         if (values > 0) {
             return true;
@@ -132,6 +135,8 @@ public class PgEngine implements Engine {
         res.next();
         count = res.getInt(1);
 
+        res.close();
+        pstmt.close();
         if (count > 0) {
             return true;
         } else {
@@ -150,11 +155,12 @@ public class PgEngine implements Engine {
         pstmt.setString(2, file);
         pstmt.setString(3, mime);
         pstmt.executeUpdate();
+
+        pstmt.close();
     }
 
     private void indexHash(String hash, String text) throws SQLException {
         PreparedStatement pstmt;
-        ResultSet res;
         String query;
 
         query = "INSERT INTO doc_index(doc_hash, doc_idx) VALUES(?, to_tsvector(?, ?))";
@@ -164,6 +170,8 @@ public class PgEngine implements Engine {
         pstmt.setString(2, this.cfg.getProperty("language"));
         pstmt.setString(3, text);
         pstmt.executeUpdate();
+
+        pstmt.close();
     }
 
     public void store(InterfaceStream stream) {
@@ -204,5 +212,64 @@ public class PgEngine implements Engine {
                 Main.logger.error("Problems about indexing file " + file, ex);
             }
         }
+    }
+
+    public ArrayList<String> getHashStored() throws SQLException {
+        ArrayList<String> result;
+        Statement stmt;
+        ResultSet res;
+        String query, hash;
+        
+        result = new ArrayList<String>();
+        query = "SELECT doc_hash FROM doc_index";
+        stmt = this.conn.createStatement();
+        res = stmt.executeQuery(query);
+        
+        while (res.next()) {
+            result.add(res.getString(1));
+        }
+
+        res.close();
+        stmt.close();
+        return result;
+    }
+
+    public void removeHash(String hash) throws SQLException {
+        PreparedStatement pstmt;
+        String query;
+
+        query = "DELETE FROM documents WHERE doc_hash = ?";
+        pstmt = this.conn.prepareStatement(query);
+        pstmt.setString(1, hash);
+        pstmt.executeUpdate();
+
+        query = "DELETE FROM doc_index WHERE doc_hash = ?";
+        pstmt = this.conn.prepareStatement(query);
+        pstmt.setString(1, hash);
+        pstmt.executeUpdate();
+
+        pstmt.close();
+        this.conn.commit();
+    }
+
+    public ArrayList<String> getFileStored(String hash) throws SQLException {
+        ArrayList<String> result;
+        PreparedStatement pstmt;
+        ResultSet res;
+        String query;
+
+        result = new ArrayList<String>();
+        query = "SELECT doc_name FROM documents where doc_hash = ?";
+        pstmt = this.conn.prepareStatement(query);
+        pstmt.setString(1, hash);
+        res = pstmt.executeQuery();
+
+        while (res.next()) {
+            result.add(res.getString(1));
+        }
+
+        res.close();
+        pstmt.close();
+        return result;
     }
 }
