@@ -82,7 +82,7 @@ public class PgEngine implements Engine {
             count = res.getInt(1);
             if (count == 0) {
                 query = "CREATE TABLE documents(doc_hash VARCHAR(32), "
-                        + "doc_name VARCHAR(1024), doc_mime VARCHAR(50), "
+                        + "doc_name VARCHAR(1024), doc_mime VARCHAR(72), "
                         + "CONSTRAINT pk_documents_1 PRIMARY KEY (doc_hash, doc_name))";
                 stmt.execute(query);
             }

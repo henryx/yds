@@ -7,9 +7,19 @@
 
 package it.application.yds.fetch.streams;
 
+import it.application.yds.Main;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.PackageAccess;
+import org.apache.poi.openxml4j.opc.PackagePart;
+import org.apache.poi.openxml4j.opc.PackagePartName;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.odftoolkit.odfdom.OdfFileDom;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
@@ -40,11 +50,24 @@ public class OfficeTextStream extends AbstractStream implements InterfaceStream 
     }
 
     private String streamFromOfficeWordText() throws IOException {
+        FileInputStream docFile;
         String result;
         WordExtractor extract;
+        XWPFWordExtractor extract2007;
 
-        extract = new WordExtractor(new FileInputStream(this.file));
-        result = extract.getText();
+        docFile = new FileInputStream(this.file);
+        try {
+            if (this.getMime().equals("application/msword")) {
+                extract = new WordExtractor(docFile);
+                result = extract.getText();
+            } else {
+                extract2007 = new XWPFWordExtractor(new XWPFDocument(docFile));
+                result = extract2007.getText();
+            }
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            Main.logger.error("Problems about reading Office file " + this.file, ex);
+            result = "";
+        }
 
         return result;
     }
