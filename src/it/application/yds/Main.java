@@ -25,7 +25,7 @@ import org.apache.log4j.PatternLayout;
  */
 public class Main {
     public static final String PROGNAME = "YDS";
-    public static final String VERSION = "0.2";
+    public static final String VERSION = "0.3";
     public static final Logger logger = Logger.getLogger("YDS");
     private Properties cfgFile;
     private Boolean scan;
