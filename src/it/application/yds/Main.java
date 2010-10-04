@@ -9,9 +9,11 @@ package it.application.yds;
 
 import it.application.yds.clean.Cleaner;
 import it.application.yds.fetch.Fetcher;
+import it.application.yds.query.Query;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
@@ -27,14 +29,17 @@ public class Main {
     public static final String PROGNAME = "YDS";
     public static final String VERSION = "0.3";
     public static final Logger logger = Logger.getLogger("YDS");
-    private Properties cfgFile;
+    private ArrayList<String> queryData;
     private Boolean clean;
     private Boolean query;
     private Boolean scan;
+    private Properties cfgFile;
 
     public Main() {
-        this.scan = Boolean.FALSE;
+        this.queryData = new ArrayList<String>();
+        this.clean = Boolean.FALSE;
         this.query = Boolean.FALSE;
+        this.scan = Boolean.FALSE;
     }
 
     /**
@@ -108,6 +113,9 @@ public class Main {
         } else if (option.equals("-w") ||
                    option.equals("--wipe")) {
             this.clean = Boolean.TRUE;
+        } else if (this.query.booleanValue()) {
+            // All parameters after -q or --query are used for query data
+            this.queryData.add(option);
         } else {
             System.out.println("Invalid parameter");
             this.printHelp();
@@ -118,6 +126,7 @@ public class Main {
     public void execute() {
         Fetcher fetch;
         Cleaner clean;
+        Query queries;
 
         if (this.scan.booleanValue() &&
             this.query.booleanValue() &&
@@ -125,7 +134,9 @@ public class Main {
             System.out.println("Only one operation at instance is valid");
             this.printHelp();
             System.exit(1);
-        } else if (!this.scan.booleanValue() && !this.scan.booleanValue()) {
+        } else if (!this.scan.booleanValue() &&
+                   !this.query.booleanValue() &&
+                   !this.clean.booleanValue()) {
             System.out.println("No operation selected");
             System.exit(1);
         }
@@ -155,7 +166,20 @@ public class Main {
         }
 
         if (this.query.booleanValue()) {
-            // TODO: implement interface for queries
+            try {
+                queries = new Query(cfgFile);
+                if (this.queryData.size() > 0) {
+                    for (String value: this.queryData) {
+                        queries.search(value);
+                    }
+                } else {
+                    queries.search();
+                }
+            } catch (IllegalArgumentException ex) {
+                Main.logger.error(null, ex);
+            } catch (SQLException ex) {
+                Main.logger.error(null, ex);
+            }
         }
     }
 

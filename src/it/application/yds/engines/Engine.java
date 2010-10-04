@@ -18,8 +18,9 @@ import java.util.ArrayList;
 public interface Engine {
 
     public void store(InterfaceStream stream);
-    public ArrayList<String> getHashStored() throws SQLException;
-    public ArrayList<String> getFileStored(String hash) throws SQLException;
     public void removeHash(String hash) throws SQLException;
+    public ArrayList<String> getStoredHash() throws SQLException;
+    public ArrayList<String> getStoredFiles(String hash) throws SQLException;
+    public ArrayList<String> queryHash(String data) throws SQLException;
 
 }

@@ -21,7 +21,7 @@ public class LuceneEngine implements Engine {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public ArrayList<String> getHashStored() throws SQLException {
+    public ArrayList<String> getStoredHash() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -29,7 +29,11 @@ public class LuceneEngine implements Engine {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public ArrayList<String> getFileStored(String hash) throws SQLException{
+    public ArrayList<String> getStoredFiles(String hash) throws SQLException{
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ArrayList<String> queryHash(String data) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

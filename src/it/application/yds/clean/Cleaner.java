@@ -40,7 +40,7 @@ public class Cleaner {
         File openFile;
 
         try {
-            hashStored = this.engine.getHashStored();
+            hashStored = this.engine.getStoredHash();
 
         } catch (SQLException ex) {
             Main.logger.error("Problems about retrieve hash to check", ex);
@@ -50,7 +50,7 @@ public class Cleaner {
         for (String hash : hashStored) {
 
             try {
-                files = this.engine.getFileStored(hash);
+                files = this.engine.getStoredFiles(hash);
 
             } catch (SQLException ex) {
                 Main.logger.error("Problems about retrieve hash to check", ex);

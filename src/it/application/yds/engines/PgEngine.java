@@ -214,7 +214,7 @@ public class PgEngine implements Engine {
         }
     }
 
-    public ArrayList<String> getHashStored() throws SQLException {
+    public ArrayList<String> getStoredHash() throws SQLException {
         ArrayList<String> result;
         Statement stmt;
         ResultSet res;
@@ -252,7 +252,7 @@ public class PgEngine implements Engine {
         this.conn.commit();
     }
 
-    public ArrayList<String> getFileStored(String hash) throws SQLException {
+    public ArrayList<String> getStoredFiles(String hash) throws SQLException {
         ArrayList<String> result;
         PreparedStatement pstmt;
         ResultSet res;
@@ -270,6 +270,29 @@ public class PgEngine implements Engine {
 
         res.close();
         pstmt.close();
+        return result;
+    }
+
+    public ArrayList<String> queryHash(String data) throws SQLException {
+        ArrayList<String> result;
+        PreparedStatement pstmt;
+        ResultSet res;
+        String query;
+
+        result = new ArrayList<String>();
+
+        query = "SELECT doc_hash FROM doc_index WHERE doc_idx @@ to_tsquery(?, ?)";
+        pstmt = this.conn.prepareStatement(query);
+        pstmt.setString(1, this.cfg.getProperty("language"));
+        pstmt.setString(2, data);
+        res = pstmt.executeQuery();
+
+        while (res.next()) {
+            result.add(res.getString(1));
+        }
+        res.close();
+        pstmt.close();
+
         return result;
     }
 }
