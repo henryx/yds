@@ -7,6 +7,9 @@ package it.application.yds.query;
 
 import it.application.yds.engines.Engine;
 import it.application.yds.engines.PgEngine;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -46,7 +49,30 @@ public class Query {
     }
     
     public void search() {
-        // TODO: create a console system for query data
+        BufferedReader input;
+        String curString;
+        boolean state;
+
+        input = new BufferedReader(new InputStreamReader(System.in));
+        state = true;
+
+        while (state) {
+            System.out.print("> ");
+            try {
+                curString = input.readLine();
+
+                if (curString.equals("\\q")) {
+                    state = false;
+                } else {
+                    try {
+                        this.search(curString);
+                    } catch (SQLException ex) {
+                    }
+                }
+            } catch (IOException e) {
+                state = false;
+            }
+        }
     }
 
 }
