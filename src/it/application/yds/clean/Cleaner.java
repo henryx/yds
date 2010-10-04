@@ -8,8 +8,8 @@
 package it.application.yds.clean;
 
 import it.application.yds.Main;
-import it.application.yds.fetch.engines.Engine;
-import it.application.yds.fetch.engines.PgEngine;
+import it.application.yds.engines.Engine;
+import it.application.yds.engines.PgEngine;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.Properties;
  *
  * @author enrico
  */
-public class Cleaner implements Runnable {
+public class Cleaner {
     private Engine engine;
     private Properties cfg;
 
@@ -35,7 +35,7 @@ public class Cleaner implements Runnable {
         }
     }
 
-    public void run() {
+    public void start() {
         ArrayList<String> files, hashStored;
         File openFile;
 

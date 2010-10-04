@@ -13,7 +13,6 @@ import java.io.IOException;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.odftoolkit.odfdom.OdfFileDom;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
 /**
@@ -28,7 +27,6 @@ public class OfficeTextStream extends AbstractStream implements InterfaceStream 
     // TODO: implement OpenOffice Writer extractor
     private String streamFromOOWriterText() throws IOException {
         OdfDocument doc;
-        OdfFileDom dom;
         String result;
 
         try {

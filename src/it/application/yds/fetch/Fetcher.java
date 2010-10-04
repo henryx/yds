@@ -8,8 +8,8 @@
 package it.application.yds.fetch;
 
 import it.application.yds.Main;
-import it.application.yds.fetch.engines.Engine;
-import it.application.yds.fetch.engines.PgEngine;
+import it.application.yds.engines.Engine;
+import it.application.yds.engines.PgEngine;
 import it.application.yds.fetch.streams.PdfStream;
 import it.application.yds.fetch.streams.InterfaceStream;
 import it.application.yds.fetch.streams.OfficeTextStream;

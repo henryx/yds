@@ -28,8 +28,9 @@ public class Main {
     public static final String VERSION = "0.3";
     public static final Logger logger = Logger.getLogger("YDS");
     private Properties cfgFile;
-    private Boolean scan;
+    private Boolean clean;
     private Boolean query;
+    private Boolean scan;
 
     public Main() {
         this.scan = Boolean.FALSE;
@@ -70,13 +71,14 @@ public class Main {
     }
 
     /**
-     * Print various information about che application
+     * Print various information about the application
      */
     public void printHelp() {
         System.out.println(Main.PROGNAME + " " + Main.VERSION);
         System.out.println("Usage:");
         System.out.println("    -c<file> or --cfg=<file> Set the configuration file");
         System.out.println("    -s or --scan             Scan data");
+        System.out.println("    -w or --wipe             Remove old indexed data");
         System.out.println("    -q or --query            Query data");
         System.out.println("    -h or --help             Print this help");
     }
@@ -103,6 +105,9 @@ public class Main {
                    option.equals("--help")) {
             this.printHelp();
             System.exit(0);
+        } else if (option.equals("-w") ||
+                   option.equals("--wipe")) {
+            this.clean = Boolean.TRUE;
         } else {
             System.out.println("Invalid parameter");
             this.printHelp();
@@ -112,10 +117,13 @@ public class Main {
 
     public void execute() {
         Fetcher fetch;
-        Thread t;
+        Cleaner clean;
 
-        if (this.scan.booleanValue() && this.query.booleanValue()) {
-            System.out.println("Scan and Query aren't available at the same instance");
+        if (this.scan.booleanValue() &&
+            this.query.booleanValue() &&
+            this.clean.booleanValue()) {
+            System.out.println("Only one operation at instance is valid");
+            this.printHelp();
             System.exit(1);
         } else if (!this.scan.booleanValue() && !this.scan.booleanValue()) {
             System.out.println("No operation selected");
@@ -124,14 +132,15 @@ public class Main {
 
         this.setLog();
 
-        try {
-            t = new Thread(new Cleaner(this.cfgFile));
-            t.setName("Cleaner");
-            t.start();
-        } catch (IllegalArgumentException ex) {
-            Main.logger.error(null, ex);
-        } catch (SQLException ex) {
-            Main.logger.error(null, ex);
+        if (this.clean.booleanValue()) {
+            try {
+                clean = new Cleaner(cfgFile);
+                clean.start();
+            } catch (IllegalArgumentException ex) {
+                Main.logger.error(null, ex);
+            } catch (SQLException ex) {
+                Main.logger.error(null, ex);
+            }
         }
 
         if (this.scan.booleanValue()) {

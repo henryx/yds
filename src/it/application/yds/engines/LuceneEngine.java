@@ -5,7 +5,7 @@
  * License       BSD (see LICENSE.BSD for details)
  */
 
-package it.application.yds.fetch.engines;
+package it.application.yds.engines;
 
 import it.application.yds.fetch.streams.InterfaceStream;
 import java.sql.SQLException;
