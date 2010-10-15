@@ -7,7 +7,7 @@
 
 package it.application.yds.engines;
 
-import it.application.yds.fetch.streams.InterfaceStream;
+import it.application.yds.fetch.streams.Stream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class LuceneEngine implements Engine {
 
-    public void store(InterfaceStream stream) {
+    public void store(Stream stream) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

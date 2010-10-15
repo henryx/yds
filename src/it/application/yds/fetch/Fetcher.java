@@ -10,8 +10,8 @@ package it.application.yds.fetch;
 import it.application.yds.Main;
 import it.application.yds.engines.Engine;
 import it.application.yds.engines.PgEngine;
+import it.application.yds.fetch.streams.Stream;
 import it.application.yds.fetch.streams.PdfStream;
-import it.application.yds.fetch.streams.InterfaceStream;
 import it.application.yds.fetch.streams.OfficeTextStream;
 import it.application.yds.fetch.streams.TextStream;
 import it.application.yds.util.FileListing;
@@ -52,7 +52,7 @@ public class Fetcher {
     public void start() {
         try {
             File path;
-            InterfaceStream stream;
+            Stream stream;
             String mime;
 
             path = new File(this.cfg.getProperty("path"));

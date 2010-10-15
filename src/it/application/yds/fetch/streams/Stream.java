@@ -21,10 +21,12 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author enrico
  */
-public abstract class AbstractStream {
+public abstract class Stream {
 
     private String mime;
     protected File file;
+
+    public abstract String getStream() throws IOException;
 
     public void setFile(File file) {
         this.file = file;

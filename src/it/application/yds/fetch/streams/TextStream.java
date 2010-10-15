@@ -14,7 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class TextStream extends AbstractStream implements InterfaceStream {
+public class TextStream extends Stream {
 
     public TextStream() {
         super();
@@ -46,7 +46,7 @@ public class TextStream extends AbstractStream implements InterfaceStream {
         return "";
     }
 
-
+    @Override
     public String getStream() throws IOException {
         // TODO: write methods to extract text from formatted text files (e.g. HTML)
 

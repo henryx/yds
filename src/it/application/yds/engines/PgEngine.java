@@ -8,7 +8,7 @@
 package it.application.yds.engines;
 
 import it.application.yds.Main;
-import it.application.yds.fetch.streams.InterfaceStream;
+import it.application.yds.fetch.streams.Stream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -174,7 +174,7 @@ public class PgEngine implements Engine {
         pstmt.close();
     }
 
-    public void store(InterfaceStream stream) {
+    public void store(Stream stream) {
         String file, hash, mime, text;
         boolean hashIndexed, fileIndexed;
 

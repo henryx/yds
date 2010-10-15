@@ -17,12 +17,13 @@ import org.apache.pdfbox.util.PDFTextStripper;
  *
  * @author enrico
  */
-public class PdfStream extends AbstractStream implements InterfaceStream {
+public class PdfStream extends Stream {
 
     public PdfStream() {
         super();
     }
 
+    @Override
     public String getStream() throws IOException {
         PDDocument document;
         PDFTextStripper stripper;

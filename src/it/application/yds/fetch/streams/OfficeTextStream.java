@@ -19,7 +19,7 @@ import org.odftoolkit.odfdom.doc.OdfDocument;
  *
  * @author enrico
  */
-public class OfficeTextStream extends AbstractStream implements InterfaceStream {
+public class OfficeTextStream extends Stream {
     public OfficeTextStream() {
         super();
     }
@@ -63,6 +63,7 @@ public class OfficeTextStream extends AbstractStream implements InterfaceStream 
         return result;
     }
 
+    @Override
     public String getStream() throws IOException {
         if (this.getMime().equals("application/vnd.oasis.opendocument.text")) {
             return streamFromOOWriterText();
