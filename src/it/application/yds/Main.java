@@ -128,19 +128,6 @@ public class Main {
         Cleaner clean;
         Query queries;
 
-        if (this.scan.booleanValue() &&
-            this.query.booleanValue() &&
-            this.clean.booleanValue()) {
-            System.out.println("Only one operation at instance is valid");
-            this.printHelp();
-            System.exit(1);
-        } else if (!this.scan.booleanValue() &&
-                   !this.query.booleanValue() &&
-                   !this.clean.booleanValue()) {
-            System.out.println("No operation selected");
-            System.exit(1);
-        }
-
         this.setLog();
 
         if (this.clean.booleanValue()) {
@@ -152,9 +139,7 @@ public class Main {
             } catch (SQLException ex) {
                 Main.logger.error(null, ex);
             }
-        }
-
-        if (this.scan.booleanValue()) {
+        } else if (this.scan.booleanValue()) {
             try {
                 fetch = new Fetcher(this.cfgFile);
                 fetch.start();
@@ -163,9 +148,7 @@ public class Main {
             } catch (SQLException ex) {
                 Main.logger.error(null, ex);
             }
-        }
-
-        if (this.query.booleanValue()) {
+        } else if (this.query.booleanValue()) {
             try {
                 queries = new Query(cfgFile);
                 if (this.queryData.size() > 0) {
@@ -180,6 +163,10 @@ public class Main {
             } catch (SQLException ex) {
                 Main.logger.error(null, ex);
             }
+        } else {
+            System.out.println("None operation is selected");
+            this.printHelp();
+            System.exit(1);
         }
     }
 
