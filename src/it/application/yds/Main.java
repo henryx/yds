@@ -122,15 +122,15 @@ public class Main {
 
     public void execute() {
         Fetcher fetch;
-        Cleaner clean;
+        Cleaner aCleaner;
         Query queries;
 
         this.setLog();
 
         if (this.clean.booleanValue()) {
             try {
-                clean = new Cleaner(cfgFile);
-                clean.start();
+                aCleaner = new Cleaner(cfgFile);
+                aCleaner.start();
             } catch (IllegalArgumentException | SQLException ex) {
                 Main.logger.error(null, ex);
             }
