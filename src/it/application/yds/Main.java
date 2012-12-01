@@ -36,7 +36,7 @@ public class Main {
     private Properties cfgFile;
 
     public Main() {
-        this.queryData = new ArrayList<String>();
+        this.queryData = new ArrayList<>();
         this.clean = Boolean.FALSE;
         this.query = Boolean.FALSE;
         this.scan = Boolean.FALSE;
@@ -52,10 +52,7 @@ public class Main {
             appender = new FileAppender(new PatternLayout("%d %-5p %c - %m%n"), this.cfgFile.getProperty("log_file"));
             Main.logger.addAppender(appender);
             Main.logger.setLevel(Level.toLevel(this.cfgFile.getProperty("log_level")));
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.FATAL, null, ex);
-            System.exit(2);
-        } catch (SecurityException ex) {
+        } catch (IOException | SecurityException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.FATAL, null, ex);
             System.exit(2);
         }
@@ -134,18 +131,14 @@ public class Main {
             try {
                 clean = new Cleaner(cfgFile);
                 clean.start();
-            } catch (IllegalArgumentException ex) {
-                Main.logger.error(null, ex);
-            } catch (SQLException ex) {
+            } catch (IllegalArgumentException | SQLException ex) {
                 Main.logger.error(null, ex);
             }
         } else if (this.scan.booleanValue()) {
             try {
                 fetch = new Fetcher(this.cfgFile);
                 fetch.start();
-            } catch (IllegalArgumentException ex) {
-                Main.logger.error(null, ex);
-            } catch (SQLException ex) {
+            } catch (IllegalArgumentException | SQLException ex) {
                 Main.logger.error(null, ex);
             }
         } else if (this.query.booleanValue()) {
@@ -158,9 +151,7 @@ public class Main {
                 } else {
                     queries.search();
                 }
-            } catch (IllegalArgumentException ex) {
-                Main.logger.error(null, ex);
-            } catch (SQLException ex) {
+            } catch (IllegalArgumentException | SQLException ex) {
                 Main.logger.error(null, ex);
             }
         } else {

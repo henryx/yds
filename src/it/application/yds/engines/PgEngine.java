@@ -174,6 +174,7 @@ public class PgEngine implements Engine {
         pstmt.close();
     }
 
+    @Override
     public void store(Stream stream) {
         String file, hash, mime, text;
         boolean hashIndexed, fileIndexed;
@@ -214,13 +215,14 @@ public class PgEngine implements Engine {
         }
     }
 
+    @Override
     public ArrayList<String> getStoredHash() throws SQLException {
         ArrayList<String> result;
         Statement stmt;
         ResultSet res;
         String query, hash;
         
-        result = new ArrayList<String>();
+        result = new ArrayList<>();
         query = "SELECT doc_hash FROM doc_index";
         stmt = this.conn.createStatement();
         res = stmt.executeQuery(query);
@@ -234,6 +236,7 @@ public class PgEngine implements Engine {
         return result;
     }
 
+    @Override
     public void removeHash(String hash) throws SQLException {
         PreparedStatement pstmt;
         String query;
@@ -252,13 +255,14 @@ public class PgEngine implements Engine {
         this.conn.commit();
     }
 
+    @Override
     public ArrayList<String> getStoredFiles(String hash) throws SQLException {
         ArrayList<String> result;
         PreparedStatement pstmt;
         ResultSet res;
         String query;
 
-        result = new ArrayList<String>();
+        result = new ArrayList<>();
         query = "SELECT doc_name FROM documents where doc_hash = ?";
         pstmt = this.conn.prepareStatement(query);
         pstmt.setString(1, hash);
@@ -273,13 +277,14 @@ public class PgEngine implements Engine {
         return result;
     }
 
+    @Override
     public ArrayList<String> queryHash(String data) throws SQLException {
         ArrayList<String> result;
         PreparedStatement pstmt;
         ResultSet res;
         String query;
 
-        result = new ArrayList<String>();
+        result = new ArrayList<>();
 
         query = "SELECT doc_hash FROM doc_index WHERE doc_idx @@ to_tsquery(?, ?)";
         pstmt = this.conn.prepareStatement(query);

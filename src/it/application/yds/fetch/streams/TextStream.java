@@ -25,7 +25,7 @@ public class TextStream extends Stream {
         BufferedReader buffer;
         String line, result;
 
-        text = new ArrayList<String>();
+        text = new ArrayList<>();
         try {
             buffer = new BufferedReader(new FileReader(this.file));
             while ((line = buffer.readLine()) != null) {

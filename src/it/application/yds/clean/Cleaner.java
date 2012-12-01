@@ -44,7 +44,7 @@ public class Cleaner {
 
         } catch (SQLException ex) {
             Main.logger.error("Problems about retrieve hash to check", ex);
-            hashStored = new ArrayList<String>();
+            hashStored = new ArrayList<>();
         }
 
         for (String hash : hashStored) {
@@ -54,7 +54,7 @@ public class Cleaner {
 
             } catch (SQLException ex) {
                 Main.logger.error("Problems about retrieve hash to check", ex);
-                files = new ArrayList<String>();
+                files = new ArrayList<>();
             }
 
             for (String file : files) {

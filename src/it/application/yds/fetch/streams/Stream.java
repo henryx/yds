@@ -32,19 +32,23 @@ public abstract class Stream {
         this.file = file;
     }
 
-    private byte[] createChecksum() throws FileNotFoundException, NoSuchAlgorithmException, IOException  {
-        InputStream fis = new FileInputStream(this.file);
-
-        byte[] buffer = new byte[1024];
-        MessageDigest complete = MessageDigest.getInstance("MD5");
+    private byte[] createChecksum() throws FileNotFoundException, NoSuchAlgorithmException, IOException {
+        MessageDigest complete;
+        byte[] buffer;
         int numRead;
-        do {
-            numRead = fis.read(buffer);
-            if (numRead > 0) {
-                complete.update(buffer, 0, numRead);
-            }
-        } while (numRead != -1);
-        fis.close();
+
+        complete = MessageDigest.getInstance("MD5");
+        buffer = new byte[1024];
+
+        try (InputStream fis = new FileInputStream(this.file)) {
+            do {
+                numRead = fis.read(buffer);
+                if (numRead > 0) {
+                    complete.update(buffer, 0, numRead);
+                }
+            } while (numRead != -1);
+        }
+
         return complete.digest();
     }
 
@@ -58,10 +62,7 @@ public abstract class Stream {
             bigInt = new BigInteger(1, check);
 
             result = bigInt.toString(16).toUpperCase();
-        } catch (FileNotFoundException ex) {
-            Main.logger.error(null, ex);
-            result = "";
-        } catch (NoSuchAlgorithmException ex) {
+        } catch (FileNotFoundException | NoSuchAlgorithmException ex) {
             Main.logger.error(null, ex);
             result = "";
         }

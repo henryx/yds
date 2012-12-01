@@ -10,9 +10,9 @@ package it.application.yds.fetch;
 import it.application.yds.Main;
 import it.application.yds.engines.Engine;
 import it.application.yds.engines.PgEngine;
-import it.application.yds.fetch.streams.Stream;
-import it.application.yds.fetch.streams.PdfStream;
 import it.application.yds.fetch.streams.OfficeTextStream;
+import it.application.yds.fetch.streams.PdfStream;
+import it.application.yds.fetch.streams.Stream;
 import it.application.yds.fetch.streams.TextStream;
 import it.application.yds.util.FileListing;
 import java.io.File;
@@ -61,21 +61,25 @@ public class Fetcher {
             for (File file : files) {
                 if (!file.isDirectory()) {
                     mime = this.mimeParser.getContentType(file);
-
-                    if (mime.equals("text/plain") ||
-                        mime.equals("text/html")) {
-                        stream = new TextStream();
-                    } else if (mime.equals("application/pdf") ||
-                               mime.equals("application/x-pdf") ||
-                               mime.equals("application/x-bzpdf") ||
-                               mime.equals("application/x-gzpdf")){
-                        stream = new PdfStream();
-                    } else if (mime.equals("application/vnd.oasis.opendocument.text") ||
-                               mime.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ||
-                               mime.equals("application/msword")) {
-                        stream = new OfficeTextStream();
-                    } else {
-                        stream = null;
+                    switch (mime) {
+                        case "text/plain":
+                        case "text/html":
+                            stream = new TextStream();
+                            break;
+                        case "application/pdf":
+                        case "application/x-pdf":
+                        case "application/x-bzpdf":
+                        case "application/x-gzpdf":
+                            stream = new PdfStream();
+                            break;
+                        case "application/vnd.oasis.opendocument.text":
+                        case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                        case "application/msword":
+                            stream = new OfficeTextStream();
+                            break;
+                        default:
+                            stream = null;
+                            break;
                     }
 
                     if (stream != null) {

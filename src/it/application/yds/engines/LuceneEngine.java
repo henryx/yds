@@ -17,10 +17,12 @@ import java.util.ArrayList;
  */
 public class LuceneEngine implements Engine {
 
+    @Override
     public void store(Stream stream) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public ArrayList<String> getStoredHash() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
