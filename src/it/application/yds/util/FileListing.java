@@ -46,8 +46,7 @@ public final class FileListing {
      *
      * @param aStartingDir is a valid directory, which can be read.
      */
-    static public List<File> getFileListing(
-            File aStartingDir) throws FileNotFoundException {
+    static public List<File> getFileListing(File aStartingDir) throws FileNotFoundException {
         validateDirectory(aStartingDir);
         List<File> result = getFileListingNoSort(aStartingDir);
         Collections.sort(result);
