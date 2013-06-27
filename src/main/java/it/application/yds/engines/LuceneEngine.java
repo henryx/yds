@@ -10,12 +10,25 @@ package it.application.yds.engines;
 import it.application.yds.fetch.streams.Stream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 
 /**
  *
  * @author enrico
  */
 public class LuceneEngine implements Engine {
+    private String location;
+    
+    public LuceneEngine(Properties cfg) {
+        this.location = cfg.getProperty("lucene_location");
+        
+        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
+        Directory index = new RAMDirectory();
+    }
 
     @Override
     public void store(Stream stream) {
