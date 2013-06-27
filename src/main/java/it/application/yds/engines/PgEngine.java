@@ -4,7 +4,6 @@
  * Description   The Yggdrasill Document Search - A java based file indexer
  * License       BSD (see LICENSE.BSD for details)
  */
-
 package it.application.yds.engines;
 
 import it.application.yds.Main;
@@ -39,7 +38,7 @@ public class PgEngine implements Engine {
         String url;
 
         try {
-            // url=jdbc:postgresql://192.168.1.2:5432/conto
+            // url=jdbc:postgresql://127.0.0.1:5432/yds
             url = "jdbc:postgresql://"
                     + this.cfg.getProperty("pg_host") + ":"
                     + this.cfg.getProperty("pg_port") + "/"
@@ -52,12 +51,16 @@ public class PgEngine implements Engine {
         }
     }
 
-    private void checkDB() {
+    private void checkDB() throws SQLException {
         PreparedStatement pstmt;
         Statement stmt;
         String queryToVerify, query;
         ResultSet res;
         int count;
+
+        pstmt = null;
+        stmt = null;
+        res = null;
 
         try {
             queryToVerify = "SELECT COUNT(tablename) FROM pg_tables WHERE "
@@ -70,10 +73,10 @@ public class PgEngine implements Engine {
             res.next();
             count = res.getInt(1);
             if (count == 0) {
-                query = "CREATE TABLE doc_index(doc_hash VARCHAR(32), doc_idx TSVECTOR, "
+                query = "CREATE TABLE public.doc_index(doc_hash VARCHAR(32), doc_idx TSVECTOR, "
                         + "CONSTRAINT pk_doc_index_1 PRIMARY KEY(doc_hash))";
                 stmt.execute(query);
-                query = "CREATE INDEX idx_doc_index_1 ON doc_index USING gist(doc_idx)";
+                query = "CREATE INDEX idx_doc_index_1 ON public.doc_index USING gist(doc_idx)";
                 stmt.execute(query);
             }
 
@@ -82,7 +85,7 @@ public class PgEngine implements Engine {
             res.next();
             count = res.getInt(1);
             if (count == 0) {
-                query = "CREATE TABLE documents(doc_hash VARCHAR(32), "
+                query = "CREATE TABLE public.documents(doc_hash VARCHAR(32), "
                         + "doc_name VARCHAR(1024), doc_mime VARCHAR(72), "
                         + "CONSTRAINT pk_documents_1 PRIMARY KEY (doc_hash, doc_name))";
                 stmt.execute(query);
@@ -90,8 +93,17 @@ public class PgEngine implements Engine {
 
             this.conn.commit();
 
-        } catch (SQLException ex) {
-            Main.logger.error(null, ex);
+        } finally {
+            if (res instanceof ResultSet) {
+                res.close();
+            }
+
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
+            if (stmt instanceof Statement) {
+                stmt.close();
+            }
         }
     }
 
@@ -101,16 +113,27 @@ public class PgEngine implements Engine {
         String query;
         int values;
 
+        pstmt = null;
+        res = null;
+
         query = "SELECT count(doc_hash) FROM doc_index where doc_hash = ?";
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, hash);
-        res = pstmt.executeQuery();
+        try {
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, hash);
+            res = pstmt.executeQuery();
 
-        res.next();
-        values = res.getInt(1);
+            res.next();
+            values = res.getInt(1);
 
-        res.close();
-        pstmt.close();
+        } finally {
+            if (res instanceof ResultSet) {
+                res.close();
+            }
+
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
+        }
 
         if (values > 0) {
             return true;
@@ -125,18 +148,28 @@ public class PgEngine implements Engine {
         String query;
         int count;
 
+        pstmt = null;
+        res = null;
         query = "SELECT COUNT(*) FROM documents WHERE doc_hash = ? AND doc_name = ?";
 
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, hash);
-        pstmt.setString(2, file);
-        res = pstmt.executeQuery();
+        try {
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, hash);
+            pstmt.setString(2, file);
+            res = pstmt.executeQuery();
 
-        res.next();
-        count = res.getInt(1);
+            res.next();
+            count = res.getInt(1);
 
-        res.close();
-        pstmt.close();
+        } finally {
+            if (res instanceof ResultSet) {
+                res.close();
+            }
+
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
+        }
         if (count > 0) {
             return true;
         } else {
@@ -148,30 +181,39 @@ public class PgEngine implements Engine {
         PreparedStatement pstmt;
         String query;
 
+        pstmt = null;
         query = "INSERT INTO documents (doc_hash, doc_name, doc_mime) VALUES (?, ?, ?)";
-
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, hash);
-        pstmt.setString(2, file);
-        pstmt.setString(3, mime);
-        pstmt.executeUpdate();
-
-        pstmt.close();
+        try {
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, hash);
+            pstmt.setString(2, file);
+            pstmt.setString(3, mime);
+            pstmt.executeUpdate();
+        } finally {
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
+        }
     }
 
     private void indexHash(String hash, String text) throws SQLException {
         PreparedStatement pstmt;
         String query;
 
+        pstmt = null;
         query = "INSERT INTO doc_index(doc_hash, doc_idx) VALUES(?, to_tsvector(?, ?))";
 
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, hash);
-        pstmt.setString(2, this.cfg.getProperty("language"));
-        pstmt.setString(3, text);
-        pstmt.executeUpdate();
-
-        pstmt.close();
+        try {
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, hash);
+            pstmt.setString(2, this.cfg.getProperty("language"));
+            pstmt.setString(3, text);
+            pstmt.executeUpdate();
+        } finally {
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
+        }
     }
 
     @Override
@@ -211,6 +253,10 @@ public class PgEngine implements Engine {
                 this.conn.commit();
             } catch (SQLException ex) {
                 Main.logger.error("Problems about indexing file " + file, ex);
+                try {
+                    this.conn.rollback();
+                } catch (SQLException e) {
+                }
             }
         }
     }
@@ -220,19 +266,30 @@ public class PgEngine implements Engine {
         ArrayList<String> result;
         Statement stmt;
         ResultSet res;
-        String query, hash;
-        
-        result = new ArrayList<>();
-        query = "SELECT doc_hash FROM doc_index";
-        stmt = this.conn.createStatement();
-        res = stmt.executeQuery(query);
-        
-        while (res.next()) {
-            result.add(res.getString(1));
-        }
+        String query;
 
-        res.close();
-        stmt.close();
+        stmt = null;
+        res = null;
+        result = new ArrayList<>();
+
+        query = "SELECT doc_hash FROM doc_index";
+
+        try {
+            stmt = this.conn.createStatement();
+            res = stmt.executeQuery(query);
+
+            while (res.next()) {
+                result.add(res.getString(1));
+            }
+        } finally {
+            if (res instanceof ResultSet) {
+                res.close();
+            }
+
+            if (stmt instanceof Statement) {
+                stmt.close();
+            }
+        }
         return result;
     }
 
@@ -241,17 +298,29 @@ public class PgEngine implements Engine {
         PreparedStatement pstmt;
         String query;
 
-        query = "DELETE FROM documents WHERE doc_hash = ?";
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, hash);
-        pstmt.executeUpdate();
+        pstmt = null;
+        try {
+            query = "DELETE FROM documents WHERE doc_hash = ?";
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, hash);
+            pstmt.executeUpdate();
+        } finally {
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
+        }
 
-        query = "DELETE FROM doc_index WHERE doc_hash = ?";
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, hash);
-        pstmt.executeUpdate();
+        try {
+            query = "DELETE FROM doc_index WHERE doc_hash = ?";
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, hash);
+            pstmt.executeUpdate();
+        } finally {
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
+        }
 
-        pstmt.close();
         this.conn.commit();
     }
 
@@ -262,18 +331,30 @@ public class PgEngine implements Engine {
         ResultSet res;
         String query;
 
+        pstmt = null;
+        res = null;
+
         result = new ArrayList<>();
         query = "SELECT doc_name FROM documents where doc_hash = ?";
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, hash);
-        res = pstmt.executeQuery();
 
-        while (res.next()) {
-            result.add(res.getString(1));
+        try {
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, hash);
+            res = pstmt.executeQuery();
+
+            while (res.next()) {
+                result.add(res.getString(1));
+            }
+        } finally {
+            if (res instanceof ResultSet) {
+                res.close();
+            }
+
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
         }
 
-        res.close();
-        pstmt.close();
         return result;
     }
 
@@ -284,19 +365,30 @@ public class PgEngine implements Engine {
         ResultSet res;
         String query;
 
+        pstmt = null;
+        res = null;
         result = new ArrayList<>();
 
         query = "SELECT doc_hash FROM doc_index WHERE doc_idx @@ to_tsquery(?, ?)";
-        pstmt = this.conn.prepareStatement(query);
-        pstmt.setString(1, this.cfg.getProperty("language"));
-        pstmt.setString(2, data);
-        res = pstmt.executeQuery();
 
-        while (res.next()) {
-            result.add(res.getString(1));
+        try {
+            pstmt = this.conn.prepareStatement(query);
+            pstmt.setString(1, this.cfg.getProperty("language"));
+            pstmt.setString(2, data);
+            res = pstmt.executeQuery();
+
+            while (res.next()) {
+                result.add(res.getString(1));
+            }
+        } finally {
+            if (res instanceof ResultSet) {
+                res.close();
+            }
+
+            if (pstmt instanceof PreparedStatement) {
+                pstmt.close();
+            }
         }
-        res.close();
-        pstmt.close();
 
         return result;
     }
