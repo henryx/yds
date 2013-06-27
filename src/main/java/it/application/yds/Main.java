@@ -169,7 +169,7 @@ public class Main {
         if (cmd.hasOption("cmd")) {
             try {
                 query = new Query(cfgFile);
-                query.search();
+                query.cmd();
             } catch (IllegalArgumentException | SQLException ex) {
                 Main.logger.error(null, ex);
                 System.exit(3);

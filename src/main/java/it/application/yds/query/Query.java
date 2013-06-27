@@ -48,7 +48,7 @@ public class Query {
 
     }
     
-    public void search() {
+    public void cmd() {
         BufferedReader input;
         String curString;
         boolean state;
