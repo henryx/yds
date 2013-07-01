@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package it.application.yds.query;
+package it.application.yds.operations;
 
 import it.application.yds.engines.Engine;
 import it.application.yds.engines.PgEngine;

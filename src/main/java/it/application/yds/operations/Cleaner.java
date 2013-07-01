@@ -5,7 +5,7 @@
  * License       BSD (see LICENSE.BSD for details)
  */
 
-package it.application.yds.clean;
+package it.application.yds.operations;
 
 import it.application.yds.Main;
 import it.application.yds.engines.Engine;

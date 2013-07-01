@@ -6,9 +6,9 @@
  */
 package it.application.yds;
 
-import it.application.yds.clean.Cleaner;
-import it.application.yds.fetch.Fetcher;
-import it.application.yds.query.Query;
+import it.application.yds.operations.Cleaner;
+import it.application.yds.operations.Fetcher;
+import it.application.yds.operations.Query;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;

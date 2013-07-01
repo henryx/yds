@@ -4,7 +4,7 @@
  * Description   The Yggdrasill Document Search - A java based file indexer
  * License       BSD (see LICENSE.BSD for details)
  */
-package it.application.yds.fetch;
+package it.application.yds.operations;
 
 import it.application.yds.Main;
 import it.application.yds.engines.Engine;
