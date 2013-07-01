@@ -7,8 +7,6 @@
 package it.application.yds.operations;
 
 import it.application.yds.Main;
-import it.application.yds.engines.Engine;
-import it.application.yds.engines.PgEngine;
 import it.application.yds.fetch.streams.OfficeTextStream;
 import it.application.yds.fetch.streams.PdfStream;
 import it.application.yds.fetch.streams.Stream;
@@ -25,14 +23,13 @@ import javax.activation.MimetypesFileTypeMap;
  *
  * @author enrico
  */
-public class Fetcher {
+public class Fetcher extends Operation {
 
-    private Engine engine;
     private MimetypesFileTypeMap mimeParser;
-    private Properties cfg;
 
     public Fetcher(Properties cfg) throws IllegalArgumentException, SQLException {
-        this.cfg = cfg;
+        super(cfg);
+
         try {
             // NOTE: /etc/mime.types is used on UNIX systems.
             //       In Windows systems this file doesn't exist
@@ -41,11 +38,6 @@ public class Fetcher {
             this.mimeParser = new MimetypesFileTypeMap();
         }
 
-        if (this.cfg.getProperty("engine").equals("postgresql")) {
-            this.engine = new PgEngine(this.cfg);
-        } else {
-            throw new IllegalArgumentException("Engine not supported");
-        }
     }
 
     private void compute(File aFile) throws FileNotFoundException {

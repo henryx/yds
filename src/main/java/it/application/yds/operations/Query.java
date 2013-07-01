@@ -5,8 +5,6 @@
 
 package it.application.yds.operations;
 
-import it.application.yds.engines.Engine;
-import it.application.yds.engines.PgEngine;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,20 +16,10 @@ import java.util.Properties;
  *
  * @author ebianchi
  */
-public class Query {
-    private Engine engine;
-    private Properties cfg;
+public class Query extends Operation {
 
     public Query(Properties cfg) throws IllegalArgumentException, SQLException {
-        super();
-
-        this.cfg = cfg;
-
-        if (this.cfg.getProperty("engine").equals("postgresql")) {
-            this.engine = new PgEngine(this.cfg);
-        } else {
-            throw new IllegalArgumentException("Engine not supported");
-        }
+        super(cfg);
     }
 
     public void search(String data) throws SQLException {

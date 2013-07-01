@@ -4,12 +4,9 @@
  * Description   The Yggdrasill Document Search - A java based file indexer
  * License       BSD (see LICENSE.BSD for details)
  */
-
 package it.application.yds.operations;
 
 import it.application.yds.Main;
-import it.application.yds.engines.Engine;
-import it.application.yds.engines.PgEngine;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,20 +16,10 @@ import java.util.Properties;
  *
  * @author enrico
  */
-public class Cleaner {
-    private Engine engine;
-    private Properties cfg;
+public class Cleaner extends Operation {
 
     public Cleaner(Properties cfg) throws IllegalArgumentException, SQLException {
-        super();
-
-        this.cfg = cfg;
-
-        if (this.cfg.getProperty("engine").equals("postgresql")) {
-            this.engine = new PgEngine(this.cfg);
-        } else {
-            throw new IllegalArgumentException("Engine not supported");
-        }
+        super(cfg);
     }
 
     public void start() {
