@@ -14,7 +14,6 @@ import java.util.Properties;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 
 /**
  *
@@ -26,7 +25,7 @@ public class LuceneEngine implements Engine {
     public LuceneEngine(Properties cfg) {
         this.location = cfg.getProperty("lucene_location");
         
-        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
+        StandardAnalyzer analyzer = new StandardAnalyzer();
         Directory index = new RAMDirectory();
     }
 
