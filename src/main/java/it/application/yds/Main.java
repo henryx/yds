@@ -17,6 +17,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -181,13 +182,14 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            Main m;
+        Main m;
 
-            m = new Main();
+        m = new Main();
+        try {
             m.go(args);
         } catch (ParseException ex) {
-            Main.logger.error(null, ex);
+            System.err.println(ex.getMessage());
+            m.printHelp(1);
         }
     }
 }
