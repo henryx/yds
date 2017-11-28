@@ -15,11 +15,11 @@ import java.sql.SQLException;
 import java.util.Properties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
@@ -42,30 +42,30 @@ public class Main {
         this.opts = new Options();
 
         this.opts.addOption("h", "help", false, "Print this help");
-        this.opts.addOption(OptionBuilder
-                .withLongOpt("cfg")
-                .withDescription("Set the configuration file")
+        this.opts.addOption(Option.builder("c")
+                .longOpt("cfg")
+                .desc("Set the configuration file")
                 .hasArg()
-                .withArgName("FILE")
-                .create("c"));
-        this.opts.addOption(OptionBuilder
-                .withLongOpt("scan")
-                .withDescription("Scan data")
-                .create("s"));
-        this.opts.addOption(OptionBuilder
-                .withLongOpt("clean")
-                .withDescription("Remove old indexed data")
-                .create("C"));
-        this.opts.addOption(OptionBuilder
-                .withLongOpt("query")
+                .argName("FILE")
+                .build());
+        this.opts.addOption(Option.builder("s")
+                .longOpt("scan")
+                .desc("Scan data")
+                .build());
+        this.opts.addOption(Option.builder("C")
+                .longOpt("clean")
+                .desc("Remove old indexed data")
+                .build());
+        this.opts.addOption(Option.builder("q")
+                .longOpt("query")
                 .hasArg()
-                .withArgName("ARG")
-                .withDescription("Query data")
-                .create("q"));
-        this.opts.addOption(OptionBuilder
-                .withLongOpt("cmd")
-                .withDescription("Use command line for querying data")
-                .create());
+                .argName("ARG")
+                .desc("Query data")
+                .build());
+        this.opts.addOption(Option.builder()
+                .longOpt("cmd")
+                .desc("Use command line for querying data")
+                .build());
     }
 
     /**
@@ -115,7 +115,7 @@ public class Main {
         Fetcher fetch;
         Query query;
 
-        parser = new PosixParser();
+        parser = new DefaultParser();
         cmd = parser.parse(this.opts, args);
 
         if (cmd.hasOption("help")) {
