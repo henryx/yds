@@ -47,6 +47,7 @@ public class Main {
                 .desc("Set the configuration file")
                 .hasArg()
                 .argName("FILE")
+                .required()
                 .build());
         this.opts.addOption(Option.builder("s")
                 .longOpt("scan")
@@ -122,13 +123,7 @@ public class Main {
             this.printHelp(0);
         }
 
-        if (cmd.hasOption("cfg")) {
-            this.setCfg(cmd.getOptionValue("cfg"));
-        } else {
-            System.out.println("No configuration file defined (see help)");
-            System.exit(2);
-        }
-
+        this.setCfg(cmd.getOptionValue("cfg"));
         this.setLog();
 
         if (cmd.hasOption("clean")) {
